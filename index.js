@@ -55,6 +55,27 @@ async function run() {
         })
 
 
+        app.get('/user/:email', async (req, res) => {
+            try {
+                const email = req.params.email;
+                console.log(email);
+                const query = {
+                    email: email,
+                };
+                const result = await userCollection.find(query).toArray();
+                console.log(result);
+                if (!result) {
+                    res.status(404).send('Item not found');
+                    return;
+                }
+                res.send(result)
+            }
+            catch (err) {
+                console.log(err);
+                // res.status(500).send('Internal Server Error');
+            }
+        })
+
         app.post('/tasks', async (req, res) => {
             const task = req.body;
             const result = await taskCollection.insertOne(task)
@@ -100,7 +121,7 @@ async function run() {
                 // res.status(500).send('Internal Server Error');
             }
         })
-        
+
         app.delete('/tasks/:email', async (req, res) => {
             const email = req.params.email;
             console.log(email);
